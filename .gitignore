@@ -1,0 +1,30 @@
+# Zig build outputs
+zig-out/
+.zig-cache/
+
+# Build cache (some setups/tools may create this)
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.exe
+*.app
+
+# Test/work dirs (if your tooling creates them)
+test-out/
+tmp/
+temp/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~ 
+
+# OS files
+.DS_Store
+Thumbs.db
