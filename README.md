@@ -1,5 +1,7 @@
 # update_sidecar
 
+Built by [krikar](https://github.com/KristianKarl) and [opencode](https://opencode.ai).
+
 Modifies XMP sidecar files to work around a limitation in Immich.
 
 ## Background
