@@ -25,7 +25,7 @@ Recursively walks `<directory>`, finds all `.xmp` files, and for each one:
 
 ## Development
 
-The project uses the `0.16.0` version of zig.
+The project uses the `0.17.0` version of Zig.
 
 ```sh
 zig build test   # run tests

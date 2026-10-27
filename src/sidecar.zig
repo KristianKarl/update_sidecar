@@ -12,7 +12,7 @@ pub fn processFile(
     file_dir: std.Io.Dir,
     filename: []const u8,
 ) !ProcessResult {
-    const limit: std.Io.Limit = @enumFromInt(10 * 1024 * 1024);
+    const limit: std.Io.Limit = @fromBackingInt(@intCast(10 * 1024 * 1024));
     const content = try file_dir.readFileAlloc(io, filename, allocator, limit);
     defer allocator.free(content);
 
@@ -113,7 +113,7 @@ fn replaceDescriptionValue(
     var result = try std.ArrayList(u8).initCapacity(allocator, content.len + (new_value.len -| old_value.len));
     try result.appendSlice(allocator, content[0..abs_pos]);
     try result.appendSlice(allocator, new_value);
-    try result.appendSlice(allocator, content[abs_pos + old_value.len..]);
+    try result.appendSlice(allocator, content[abs_pos + old_value.len ..]);
     return @as(?[]u8, try result.toOwnedSlice(allocator));
 }
 
