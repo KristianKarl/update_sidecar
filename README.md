@@ -15,13 +15,21 @@ Modifies XMP sidecar files to work around a limitation in Immich.
 
 ```sh
 zig build run -- <directory>
+zig build run -- --help       # show detailed usage, options, and safety notes
 ```
+
+The directory defaults to the current directory when omitted. Use `--help` or
+`-h` instead of a directory to print help without processing any files. There
+are no subcommands or other options.
 
 Recursively walks `<directory>`, finds all `.xmp` files, and for each one:
 
 1. Extracts the `Title` field.
 2. Copies it into the `Description` field (appending if a description already exists).
 3. Backs up the original file with a `.orig` suffix before writing the updated version.
+
+**Warning:** An existing `.orig` backup is overwritten if that sidecar is updated
+again. There is no dry-run mode; keep a separate backup of important metadata.
 
 ## Development
 
