@@ -83,6 +83,18 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
+    const build_options = b.addOptions();
+    build_options.addOption([]const u8, "version", @import("build.zig.zon").version);
+    exe.root_module.addOptions("build_options", build_options);
+
+    const git_commit = b.addSystemCommand(&.{ "git", "rev-parse", "--short", "HEAD" });
+    git_commit.setCwd(b.path("."));
+    // HEAD can change without any source files changing.
+    git_commit.has_side_effects = true;
+    exe.root_module.addAnonymousImport("git_commit", .{
+        .root_source_file = git_commit.captureStdOut(.{}),
+    });
+
     // This declares intent for the executable to be installed into the
     // install prefix when running `zig build` (i.e. when executing the default
     // step). By default the install prefix is `zig-out/` but can be overridden
@@ -139,6 +151,12 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run tests");
     test_step.dependOn(&run_mod_tests.step);
     test_step.dependOn(&run_exe_tests.step);
+
+    const version_test = b.addRunArtifact(exe);
+    version_test.addArg("--version");
+    version_test.expectStdOutMatch(b.fmt("update_sidecar {s} (", .{@import("build.zig.zon").version}));
+    version_test.expectStdErrEqual("");
+    test_step.dependOn(&version_test.step);
 
     // Just like flags, top level steps are also listed in the `--help` menu.
     //

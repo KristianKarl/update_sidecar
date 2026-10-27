@@ -1,5 +1,9 @@
 const std = @import("std");
 const sidecar = @import("update_sidecar");
+const build_options = @import("build_options");
+
+const version = "update_sidecar " ++ build_options.version ++ " (" ++
+    std.mem.trim(u8, @embedFile("git_commit"), "\r\n") ++ ")\n";
 
 const help =
     \\update_sidecar - Make XMP sidecar titles visible in Immich.
@@ -8,6 +12,7 @@ const help =
     \\  update_sidecar [DIRECTORY]
     \\  update_sidecar --help
     \\  update_sidecar -h
+    \\  update_sidecar --version
     \\
     \\ARGUMENTS
     \\  DIRECTORY   Directory to search recursively. Defaults to the current
@@ -16,6 +21,8 @@ const help =
     \\OPTIONS
     \\  -h, --help  Print this help and exit without reading or changing sidecars.
     \\              Use this option in place of DIRECTORY.
+    \\  --version   Print the version and build commit SHA, then exit without
+    \\              processing sidecars. Use this option in place of DIRECTORY.
     \\
     \\SUBCOMMANDS
     \\  None. Running the program processes sidecars immediately.
@@ -40,7 +47,7 @@ const help =
     \\  Reports updated and skipped files, individual file errors, and a final
     \\  count of sidecars checked and updated. Processing continues after an
     \\  individual file error. These messages go to standard error; help goes
-    \\  to standard output.
+    \\  to standard output, as does --version.
     \\
     \\EXAMPLES
     \\  update_sidecar
@@ -57,6 +64,8 @@ const help =
     \\      Build and run the program on a specific directory.
     \\  ./zig-out/bin/update_sidecar --help
     \\      Show help from the binary installed by zig build.
+    \\  update_sidecar --version
+    \\      Show the version, for example: update_sidecar 1.0.2 (a1b2c3d)
     \\
 ;
 
@@ -69,6 +78,10 @@ pub fn main(init: std.process.Init) !void {
     const dir_path = if (args.len > 1) args[1] else ".";
     if (std.mem.eql(u8, dir_path, "--help") or std.mem.eql(u8, dir_path, "-h")) {
         try std.Io.File.stdout().writeStreamingAll(io, help);
+        return;
+    }
+    if (std.mem.eql(u8, dir_path, "--version")) {
+        try std.Io.File.stdout().writeStreamingAll(io, version);
         return;
     }
 
