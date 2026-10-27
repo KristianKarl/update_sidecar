@@ -16,11 +16,17 @@ Modifies XMP sidecar files to work around a limitation in Immich.
 ```sh
 zig build run -- <directory>
 zig build run -- --help       # show detailed usage, options, and safety notes
+zig build run -- --version    # show the version and build commit SHA
 ```
 
 The directory defaults to the current directory when omitted. Use `--help` or
 `-h` instead of a directory to print help without processing any files. There
-are no subcommands or other options.
+are no subcommands. Use `--version` instead of a directory to print the version,
+for example `update_sidecar 1.0.2 (a1b2c3d)`, without processing files.
+
+The version number comes from `build.zig.zon`. The abbreviated Git SHA is embedded
+at build time, so Git and a repository checkout are required to build, but not to
+run the binary.
 
 Recursively walks `<directory>`, finds all `.xmp` files, and for each one:
 
